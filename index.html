@@ -992,6 +992,7 @@ footer {
           </a>
           <a href="#signals" class="btn btn-outline">◈ &nbsp;LIVE SIGNALS</a>
           <button onclick="copyCA()" class="btn btn-outline">⊕ &nbsp;COPY CA</button>
+          <button onclick="showCommands()" class="btn btn-outline">⌘ &nbsp;COMMAND INDEX</button>
           <div class="ca-display">CA: BoBj68cWnCvzMNUKzJyR7Jq7tLM3v76D1pYL1E8rpump</div>
         </div>
       </div>
@@ -1814,6 +1815,48 @@ function buySignal() {
   beep(660,60);
   sys.buys++;
   addLog('[BUY SIGNAL] › redirecting to Jupiter market...', 'sys');
+}
+
+  function showCommands() {
+
+  const commands = [
+    'help',
+    'status',
+    'price',
+    'contract',
+    'signal',
+    'scan',
+    'clear',
+    'state',
+    'matrix',
+    'intel',
+    'network',
+    'node',
+    'wallet',
+    'ai',
+    'terminal',
+    'hidden',
+    'chip',
+    'access',
+    'reality',
+    'system',
+    'watching',
+    'fear',
+    'signal++',
+    'wake',
+    'protocol',
+    'scan deep'
+  ];
+
+  addLog('[COMMAND INDEX OPENED]', 'sys');
+
+  commands.forEach((cmd, i) => {
+    setTimeout(() => {
+      addLog('> ' + cmd, 'sys');
+    }, i * 120);
+  });
+
+  beep(880, 60);
 }
 
 // ══════════════════════════════════════════
