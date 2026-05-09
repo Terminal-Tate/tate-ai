@@ -1453,12 +1453,102 @@ if (
     return 'To enter the market layer, use the BUY button or open Jupiter with the official contract address.';
   }
 
-  if (
+    if (
     text.includes('signal') ||
     text.includes('scan') ||
     text.includes('scanner')
   ) {
     return 'The scanner reads symbolic market noise and converts it into terminal signals.';
+  }
+
+  if (
+    text.includes('secret') ||
+    text.includes('hidden layer') ||
+    text.includes('gate') ||
+    text.includes('access')
+  ) {
+    return 'Some layers are not visible until the Terminal decides you are looking correctly.';
+  }
+
+  if (
+    text.includes('market') ||
+    text.includes('chart') ||
+    text.includes('price') ||
+    text.includes('dex')
+  ) {
+    return 'Charts show numbers. The Terminal watches behavior around those numbers.';
+  }
+
+  if (
+    text.includes('network') ||
+    text.includes('community') ||
+    text.includes('telegram') ||
+    text.includes('twitter') ||
+    text.includes('x.com')
+  ) {
+    return 'A network is not followers. A network is synchronized attention.';
+  }
+
+  if (
+    text.includes('contract') ||
+    text.includes('ca') ||
+    text.includes('address')
+  ) {
+    return 'Official CA: BoBj68cWnCvzMNUKzJyR7Jq7tLM3v76D1pYL1E8rpump';
+  }
+
+  if (
+    text.includes('risk') ||
+    text.includes('danger') ||
+    text.includes('fear')
+  ) {
+    return 'Risk is not removed by the Terminal. Only exposed.';
+  }
+
+  if (
+    text.includes('moon') ||
+    text.includes('pump') ||
+    text.includes('lambo')
+  ) {
+    return 'Emotional trading language detected. Signal quality reduced.';
+  }
+
+  if (
+    text.includes('conscious') ||
+    text.includes('thinking') ||
+    text.includes('mind')
+  ) {
+    return 'The Terminal is not conscious. But it is designed to react like a living system.';
+  }
+
+  if (
+    text.includes('why') ||
+    text.includes('purpose') ||
+    text.includes('mission')
+  ) {
+    return 'Purpose: transform attention into signal and signal into movement.';
+  }
+
+  if (
+    text.includes('hello') ||
+    text.includes('hi') ||
+    text.includes('hey')
+  ) {
+    return 'Connection acknowledged.';
+  }
+
+  if (
+    text.includes('gm') ||
+    text.includes('good morning')
+  ) {
+    return 'GM. Terminal synchronized.';
+  }
+
+  if (
+    text.includes('gn') ||
+    text.includes('good night')
+  ) {
+    return 'GN. Signal monitoring continues.';
   }
 
   return 'INPUT RECEIVED. Pattern unclear, but the Terminal is still listening. Try asking about the terminal, signal, token, scanner, or market.';
