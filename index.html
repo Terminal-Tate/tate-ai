@@ -1428,6 +1428,34 @@ function saveMemory() {
 }
 
 
+  function behaviorCheck(action) {
+  sys.lastBehavior = action;
+
+  if (action === "scan") {
+    if (sys.scans >= 2) {
+      sys.repeatedScans++;
+      addLog("Repeated scan behavior detected.", "warn");
+    }
+
+    if (sys.scans >= 4) {
+      sys.awarenessLevel++;
+      addLog("The Terminal remembers this scanning pattern.", "sys");
+    }
+  }
+
+  if (action === "buy") {
+    addLog("Market intent detected.", "sys");
+  }
+
+  if (action === "copy") {
+    addLog("Contract focus detected.", "sys");
+  }
+
+  saveMemory();
+}
+  
+
+
 function addLog(text, type='normal') {
   const line = document.createElement('div');
   line.className = 'log-line';
@@ -1872,7 +1900,7 @@ function scanSignal() {
   const s = Math.floor(Math.random()*31)+60;
   animBars(s);
   sys.scans++;
-  saveMemory();
+  behaviorCheck("scan");
 
   // Animate freq display
   let fCount = 0;
@@ -1896,7 +1924,7 @@ function copyCA() {
   navigator.clipboard.writeText('BoBj68cWnCvzMNUKzJyR7Jq7tLM3v76D1pYL1E8rpump');
   beep(880,80); beep(1100,60);
   sys.copies++;
-  saveMemory();
+  behaviorCheck("copy");
   addLog('[CA COPIED TO CLIPBOARD]', 'sys');
   showToast('✓ CONTRACT ADDRESS COPIED');
 }
@@ -1904,7 +1932,7 @@ function copyCA() {
 function buySignal() {
   beep(660,60);
   sys.buys++;
-  saveMemory();
+  behaviorCheck("buy");
   addLog('[BUY SIGNAL] › redirecting to Jupiter market...', 'sys');
 }
 
