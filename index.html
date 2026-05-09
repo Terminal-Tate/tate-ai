@@ -1824,6 +1824,22 @@ bootSeq.forEach(([t, msg, type]) => setTimeout(() => { beep(440,40,0.04); addLog
   }
 }, 5400);
 
+  setTimeout(() => {
+  const loreIntro = [
+    '[ARCHIVE] Fragmented transmissions recovered.',
+    '[TRACE] Multiple terminal nodes were detected before the silence event.',
+    '[NOISE] Several signal copies created confusion across the network.',
+    '[OBSERVER] Some users continued scanning after the terminals went quiet.',
+    '[REMNANT] This interface is still responding.'
+  ];
+
+  loreIntro.forEach((msg, i) => {
+    setTimeout(() => {
+      addLog(msg, i === 2 ? 'warn' : 'sys');
+    }, i * 900);
+  });
+}, 6200);
+
 // ══════════════════════════════════════════
 //  AUTO MESSAGES
 // ══════════════════════════════════════════
@@ -1837,12 +1853,22 @@ const autoMsgs = [
   ['> node sync complete: 100%', 'sys'],
   ['> blockchain confirmation: VERIFIED', 'sys'],
   ['!! SIGNAL INTERFERENCE DETECTED !!', 'warn'],
+  ['!! ARCHIVED NODE RESPONSE UNSTABLE !!', 'warn'],
+  ['!! MIRROR LAYER DESYNC DETECTED !!', 'warn'],
 ];
 setInterval(() => {
-  const m = autoMsgs[Math.floor(Math.random()*autoMsgs.length)];
-  addLog(m[0], m[1]);
-  if (m[1]==='warn') { document.body.classList.add('flickering'); setTimeout(()=>document.body.classList.remove('flickering'),300); beep(220,100,0.03); }
-}, 11000);
+  const anomalyChance = Math.random();
+
+  if (anomalyChance > 0.82) {
+    const warnings = autoMsgs.filter(m => m[1] === 'warn');
+    const m = warnings[Math.floor(Math.random() * warnings.length)];
+
+    addLog(m[0], m[1]);
+    document.body.classList.add('flickering');
+    setTimeout(() => document.body.classList.remove('flickering'), 300);
+    beep(220, 100, 0.03);
+  }
+}, 45000);
 
 // ══════════════════════════════════════════
 //  LIVE TOASTS
@@ -1883,6 +1909,12 @@ const signals = [
   "NETWORK SYNCHRONIZATION: Nodes aligning.",
   "MEMETIC ESCALATION: Spread accelerating.",
   "FINAL TRACE: You were always inside.",
+  "ARCHIVED TRACE: Multiple terminals disappeared simultaneously.",
+  "REMNANT SIGNAL: One node continues responding.",
+  "NOISE LAYER DETECTED: Signal copies interfering with trace accuracy.",
+  "OBSERVER PATTERN: Certain users continue returning after shutdown.",
+  "RECOVERED TRANSMISSION: The network was larger than publicly visible.",
+  "MIRROR RESPONSE: The Terminal is adapting to repeated interaction.",
 ];
 
 const sBars = document.querySelectorAll('.s-bar');
