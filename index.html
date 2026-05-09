@@ -1580,6 +1580,30 @@ if (
 
   return 'INPUT RECEIVED. Pattern unclear, but the Terminal is still listening. Try asking about the terminal, signal, token, scanner, or market.';
 }
+
+
+    const systemState = {
+  status: "ACTIVE",
+
+  userActive: true,
+
+  scans: 0,
+  signals: 0,
+  questions: 0,
+
+  repeatedScans: 0,
+  repeatedSignals: 0,
+
+  hesitationLevel: 0,
+  awarenessLevel: 0,
+
+  lastCommand: "",
+  lastBehavior: "",
+
+  idleCount: 0,
+  idleStage: 0
+};
+    
     
     const cmds = {
       'help': () => addLog('COMMANDS: status · price · contract · signal · scan · clear · state · matrix', 'sys'),
