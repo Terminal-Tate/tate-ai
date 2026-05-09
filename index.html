@@ -1398,6 +1398,36 @@ document.addEventListener('click', () => getAudio(), {once:true});
 const logFeed = document.getElementById('logFeed');
 const MAX_LOG = 80;
 
+// ══════════════════════════════════════════
+//  SYSTEM STATE
+// ══════════════════════════════════════════
+const defaultMemory = {
+  username: "",
+  visits: 0,
+  scans: 0,
+  signals: 0,
+  buys: 0,
+  copies: 0,
+  questions: 0,
+  commands: 0,
+  repeatedScans: 0,
+  repeatedSignals: 0,
+  lastCommand: "",
+  lastBehavior: "",
+  awarenessLevel: 0,
+  hesitationLevel: 0
+};
+
+const sys = JSON.parse(localStorage.getItem("tateai_memory")) || defaultMemory;
+
+sys.visits++;
+localStorage.setItem("tateai_memory", JSON.stringify(sys));
+
+function saveMemory() {
+  localStorage.setItem("tateai_memory", JSON.stringify(sys));
+}
+
+
 function addLog(text, type='normal') {
   const line = document.createElement('div');
   line.className = 'log-line';
@@ -1581,31 +1611,10 @@ if (
   return 'INPUT RECEIVED. Pattern unclear, but the Terminal is still listening. Try asking about the terminal, signal, token, scanner, or market.';
 }
 
-
-    const systemState = {
-  status: "ACTIVE",
-
-  userActive: true,
-
-  scans: 0,
-  signals: 0,
-  questions: 0,
-
-  repeatedScans: 0,
-  repeatedSignals: 0,
-
-  hesitationLevel: 0,
-  awarenessLevel: 0,
-
-  lastCommand: "",
-  lastBehavior: "",
-
-  idleCount: 0,
-  idleStage: 0
-};
-    
-    
+     
     const cmds = {
+      'name': () => addLog('TYPE: name widelton', 'sys'),
+      
       'help': () => addLog('COMMANDS: status · price · contract · signal · scan · clear · state · matrix', 'sys'),
       'status': () => addLog('TERMINAL ONLINE — ALL NODES SYNCHRONIZED', 'sys'),
       'price': () => addLog(document.getElementById('t-price').textContent || 'FETCHING...', 'sys'),
@@ -1662,15 +1671,35 @@ if (
 },
       
     };
-    if (cmds[cmd]) cmds[cmd]();
-    else addLog(smartReply(cmd), 'sys');
+    if (cmd.startsWith('name ')) {
+  const newName = cmd.replace('name ', '').trim();
+
+  if (newName.length < 2) {
+    addLog('NAME REJECTED. SIGNAL ID TOO SHORT.', 'warn');
+  } else {
+    sys.username = newName;
+    sys.lastCommand = cmd;
+    saveMemory();
+
+    addLog('USER PROFILE CREATED: ' + sys.username, 'sys');
+    addLog('Welcome, ' + sys.username + '.', 'sys');
+  }
+
+} else if (cmds[cmd]) {
+  sys.commands++;
+  sys.lastCommand = cmd;
+  saveMemory();
+  cmds[cmd]();
+
+} else {
+  sys.questions++;
+  sys.lastCommand = cmd;
+  saveMemory();
+  addLog(smartReply(cmd), 'sys');
+}
   }, 350);
 });
 
-// ══════════════════════════════════════════
-//  SYSTEM STATE
-// ══════════════════════════════════════════
-const sys = { scans:0, buys:0, copies:0 };
 
 // ══════════════════════════════════════════
 //  PRICE DATA
@@ -1755,6 +1784,15 @@ const bootSeq = [
   [3200, '[READY] AWAITING INPUT... type help', 'sys'],
 ];
 bootSeq.forEach(([t, msg, type]) => setTimeout(() => { beep(440,40,0.04); addLog(msg, type); }, t));
+  setTimeout(() => {
+  if (!sys.username) {
+    addLog('[MEMORY] USER PROFILE NOT FOUND.', 'warn');
+    addLog('Type: name yourname', 'sys');
+  } else {
+    addLog('Welcome back, ' + sys.username + '.', 'sys');
+    addLog('[MEMORY] VISITS: ' + sys.visits + ' | LAST COMMAND: ' + (sys.lastCommand || 'NONE'), 'sys');
+  }
+}, 3800);
 
 // ══════════════════════════════════════════
 //  AUTO MESSAGES
@@ -1834,6 +1872,7 @@ function scanSignal() {
   const s = Math.floor(Math.random()*31)+60;
   animBars(s);
   sys.scans++;
+  saveMemory();
 
   // Animate freq display
   let fCount = 0;
@@ -1857,6 +1896,7 @@ function copyCA() {
   navigator.clipboard.writeText('BoBj68cWnCvzMNUKzJyR7Jq7tLM3v76D1pYL1E8rpump');
   beep(880,80); beep(1100,60);
   sys.copies++;
+  saveMemory();
   addLog('[CA COPIED TO CLIPBOARD]', 'sys');
   showToast('✓ CONTRACT ADDRESS COPIED');
 }
@@ -1864,6 +1904,7 @@ function copyCA() {
 function buySignal() {
   beep(660,60);
   sys.buys++;
+  saveMemory();
   addLog('[BUY SIGNAL] › redirecting to Jupiter market...', 'sys');
 }
 
