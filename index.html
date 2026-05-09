@@ -1564,6 +1564,52 @@ if (
       'clear': () => { logFeed.innerHTML = ''; },
       'state': () => addLog(`SCANS:${sys.scans} | BUYS:${sys.buys} | COPIES:${sys.copies}`, 'sys'),
       'matrix': () => { for(let i=0;i<5;i++) setTimeout(()=>addLog(Array(20).fill(0).map(()=>Math.random()>.5?'1':'0').join('')),i*200); },
+
+'intel': () => addLog('INTELLIGENCE LAYER ACTIVE — monitoring narrative movement.', 'sys'),
+
+'network': () => addLog('NETWORK STATUS: decentralized nodes synchronized.', 'sys'),
+
+'node': () => addLog('NODE TRACE: user connected to active terminal stream.', 'sys'),
+
+'wallet': () => addLog('WALLET DETECTION DISABLED — privacy protocol active.', 'sys'),
+
+'ai': () => addLog('AI CORE: reactive behavioral engine online.', 'sys'),
+
+'terminal': () => addLog('TERMINAL STATUS: observing user interaction patterns.', 'sys'),
+
+'hidden': () => addLog('HIDDEN LAYER: access not publicly indexed.', 'sys'),
+
+'chip': () => addLog('TERMINAL CHIP detected inside lower protocol layers.', 'sys'),
+
+'access': () => addLog('ACCESS STATUS: partial visibility granted.', 'sys'),
+
+'reality': () => addLog('REALITY ENGINE: symbolic interpretation layer active.', 'sys'),
+
+'system': () => addLog('SYSTEM ONLINE — signal routing stable.', 'sys'),
+
+'watching': () => addLog('YES. USER INTERACTION IS BEING OBSERVED.', 'warn'),
+
+'fear': () => addLog('FEAR DETECTED — emotional volatility affects decision quality.', 'warn'),
+
+'signal++': () => {
+  addLog('AMPLIFYING SIGNAL...', 'sys');
+  setTimeout(() => addLog('SIGNAL STRENGTH: 92%', 'sys'), 600);
+},
+
+'wake': () => {
+  addLog('WAKE SEQUENCE INITIATED...', 'warn');
+  document.body.classList.add('glitching');
+  setTimeout(() => document.body.classList.remove('glitching'), 700);
+},
+
+'protocol': () => addLog('PROTOCOL STATUS: layered concealment active.', 'sys'),
+
+'scan deep': () => {
+  addLog('DEEP SCAN INITIALIZED...', 'warn');
+  setTimeout(() => addLog('MEMETIC DISTORTIONS DETECTED.', 'sys'), 800);
+  setTimeout(() => addLog('ATTENTION PATTERNS MAPPED.', 'sys'), 1400);
+},
+      
     };
     if (cmds[cmd]) cmds[cmd]();
     else addLog(smartReply(cmd), 'sys');
