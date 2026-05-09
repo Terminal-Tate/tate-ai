@@ -1805,11 +1805,13 @@ loadData(); setInterval(loadData, 28000);
 //  BOOT SEQUENCE
 // ══════════════════════════════════════════
 const bootSeq = [
-  [500, '[SYS]  INITIALIZING TATE AI TERMINAL...', 'sys'],
-  [1200, '[NET]  CONNECTING TO DECENTRALIZED NETWORK...', 'sys'],
-  [1900, '[CORE] AI CORE ONLINE', 'sys'],
-  [2500, '[SIG]  SIGNAL NODE: SYNCHRONIZED', 'sys'],
-  [3200, '[READY] AWAITING INPUT... type help', 'sys'],
+  [500, '[SYS]  RECOVERING TERMINAL FRAGMENTS...', 'sys'],
+[1200, '[NET]  SEARCHING FOR ACTIVE NODES...', 'sys'],
+[1900, '[ARCHIVE] MULTIPLE TERMINALS LOST CONNECTION', 'warn'],
+[2600, '[TRACE] SIGNAL PATTERNS STILL DETECTED', 'sys'],
+[3300, '[MEMORY] USER BEHAVIOR LOGGING ENABLED', 'sys'],
+[4000, '[REMNANT] ONE INTERFACE REMAINS ACCESSIBLE', 'warn'],
+[4700, '[READY] TERMINAL AWAITING INPUT...', 'sys'],
 ];
 bootSeq.forEach(([t, msg, type]) => setTimeout(() => { beep(440,40,0.04); addLog(msg, type); }, t));
   setTimeout(() => {
@@ -1820,7 +1822,7 @@ bootSeq.forEach(([t, msg, type]) => setTimeout(() => { beep(440,40,0.04); addLog
     addLog('Welcome back, ' + sys.username + '.', 'sys');
     addLog('[MEMORY] VISITS: ' + sys.visits + ' | LAST COMMAND: ' + (sys.lastCommand || 'NONE'), 'sys');
   }
-}, 3800);
+}, 5400);
 
 // ══════════════════════════════════════════
 //  AUTO MESSAGES
