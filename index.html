@@ -1084,7 +1084,7 @@ footer {
         <span class="chart-tag">REAL-TIME</span>
       </div>
       <iframe src="https://dexscreener.com/solana/35nKRCW9BZhkbmp2zhyZ428saV3X46M9UUUqSj1b6Lvt?embed=1&theme=dark"
-        width="100%" height="520" style="border:none;display:block"></iframe>
+        width="100%" height="520" style="border:none;display:block" loading="lazy"></iframe>
     </div>
   </div>
 </section>
@@ -1206,7 +1206,7 @@ const cur = document.getElementById('cur');
 const curD = document.getElementById('cur-d');
 let mx = 0, my = 0, cx2 = 0, cy2 = 0;
 
-document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; }, { passive: true });
 document.addEventListener('mousedown', () => cur.classList.add('expand'));
 document.addEventListener('mouseup', () => cur.classList.remove('expand'));
 
@@ -1262,7 +1262,18 @@ function drawMatrix() {
     mDrops[i]++;
   }
 }
-setInterval(drawMatrix, 48);
+let lastMatrixFrame = 0;
+
+function matrixLoop(timestamp) {
+  if (timestamp - lastMatrixFrame >= 48) {
+    drawMatrix();
+    lastMatrixFrame = timestamp;
+  }
+
+  requestAnimationFrame(matrixLoop);
+}
+
+requestAnimationFrame(matrixLoop);
 
 // ══════════════════════════════════════════
 //  HEXAGONAL GRID
@@ -1353,10 +1364,12 @@ const robotWrap = document.getElementById('robotWrap');
 let trX = 0, trY = 0, crX = 0, crY = 0;
 
 document.addEventListener('mousemove', e => {
-  const hw = window.innerWidth/2, hh = window.innerHeight/2;
+  const hw = window.innerWidth / 2;
+  const hh = window.innerHeight / 2;
+
   trX = (e.clientX - hw) / hw;
   trY = (e.clientY - hh) / hh;
-});
+}, { passive: true });
 
 (function animRobot() {
   crX += (trX - crX) * 0.055;
@@ -1847,8 +1860,8 @@ setInterval(() => {
     const m = warnings[Math.floor(Math.random() * warnings.length)];
 
     addLog(m[0], m[1]);
-    document.body.classList.add('flickering');
-    setTimeout(() => document.body.classList.remove('flickering'), 300);
+    document.getElementById('heroRobot').classList.add('flickering');
+    setTimeout(() => document.getElementById('heroRobot').classList.remove('flickering'), 300);
     beep(220, 100, 0.03);
   }
 }, 45000);
@@ -1864,9 +1877,6 @@ function showToast(msg) {
 
 const nodes = ['NODE_483','WALLET_91X','SIGNAL_77','AGENT_204','SCAN_808','MIRROR_12','KEY_∞','ROOT_7'];
 const acts = ['joined the signal','triggered scanner pulse','entered terminal range','amplified network activity','synced with node','detected memetic shift'];
-setInterval(() => {
-  showToast(nodes[Math.floor(Math.random()*nodes.length)] + ' ' + acts[Math.floor(Math.random()*acts.length)]);
-}, 9000);
 
 // ══════════════════════════════════════════
 //  SIGNAL SCANNER
@@ -2004,7 +2014,7 @@ function resetIdle() {
   clearTimeout(idleTimer);
   idleTimer = setTimeout(() => { addLog('[IDLE] › no input detected. awaiting command...'); }, 12000);
 }
-document.addEventListener('mousemove', resetIdle);
+  
 document.addEventListener('keydown', resetIdle);
 resetIdle();
 </script>
