@@ -1313,9 +1313,11 @@ function animGrid() {
       drawHex(x, y, size * 0.55, alpha);
     }
   }
+  setTimeout(() => {
   requestAnimationFrame(animGrid);
+}, 80);
 }
-// animGrid();
+ animGrid();
 
 // ══════════════════════════════════════════
 //  PARTICLES
