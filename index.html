@@ -1099,11 +1099,17 @@ const sys = (() => {
     const oldMemory = JSON.parse(localStorage.getItem("tateai_memory"));
     const newMemory = JSON.parse(localStorage.getItem("tateai_v2"));
 
-    return {
-      ...defaultMemory,
-      ...(oldMemory || {}),
-      ...(newMemory || {})
-    };
+    const mergedMemory = {
+  ...defaultMemory,
+  ...(oldMemory || {}),
+  ...(newMemory || {})
+};
+
+if (!mergedMemory.username && oldMemory?.username) {
+  mergedMemory.username = oldMemory.username;
+}
+
+return mergedMemory;
   } catch(e) {
     return { ...defaultMemory };
   }
