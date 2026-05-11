@@ -1235,6 +1235,25 @@ const cmds = {
   'watching': () => addLog('YES. USER INTERACTION IS BEING OBSERVED.', 'warn'),
   'fear':     () => addLog('FEAR DETECTED — emotional volatility affects decision quality.', 'warn'),
   'protocol': () => { addLog('PROTOCOL STATUS: layered concealment active.', 'sys'); sys.depthScore++; },
+  'dossier': () => {
+    addLog('SIGNAL DOSSIER ACCESS REQUESTED...', 'warn');
+    setTimeout(() => addLog('ARCHIVE FILE FOUND: SIG-DOSSIER-001', 'sys'), 600);
+    setTimeout(() => {
+      addLog('OPENING SIGNAL DOSSIER...', 'sys');
+      window.open('dossier.html', '_blank');
+    }, 1400);
+    sys.depthScore += 2;
+  },
+
+  'archive': () => {
+    addLog('ARCHIVE ACCESS GRANTED.', 'warn');
+    setTimeout(() => addLog('REDIRECTING OBSERVER TO SIGNAL DOSSIER...', 'sys'), 700);
+    setTimeout(() => {
+      window.open('dossier.html', '_blank');
+    }, 1400);
+    sys.depthScore += 2;
+  },
+  
   'wake': () => {
     addLog('WAKE SEQUENCE INITIATED...', 'warn');
     document.body.classList.add('glitching');
