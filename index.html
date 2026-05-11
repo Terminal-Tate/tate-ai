@@ -606,6 +606,18 @@ footer{position:relative;z-index:5;text-align:center;padding:28px;border-top:1px
 }
 #depthIndicator.visible { opacity: 1; }
 
+/* ── HIDDEN CHIP ACCESS ── */
+.hidden-chip-access{
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  width: 42px;
+  height: 42px;
+  z-index: 999;
+  opacity: 0;
+  cursor: none;
+}
+  
 /* ── MOBILE ── */
 @media(max-width:768px){
   .nav-links{display:none;}
@@ -667,6 +679,13 @@ footer{position:relative;z-index:5;text-align:center;padding:28px;border-top:1px
   <a href="https://jup.ag/?sell=So11111111111111111111111111111111111111112&buy=BoBj68cWnCvzMNUKzJyR7Jq7tLM3v76D1pYL1E8rpump" target="_blank" class="nav-cta">BUY $TATEAI</a>
 </nav>
 
+<a 
+  href="https://terminal-tate.github.io/terminal-chip/" 
+  target="_blank" 
+  class="hidden-chip-access"
+  aria-label="Terminal Chip Access">
+</a>
+  
 <!-- HERO -->
 <section class="hero" id="home">
   <div class="hero-bg-text">TATEAI</div>
@@ -1062,23 +1081,42 @@ function beep(freq=880, dur=75, vol=0.05, type='square') {
 document.addEventListener('click', () => getAudio(), {once:true});
 
 // ══════ MEMORY SYSTEM ══════
-// NOTE: Key changed to 'tateai_v2' intentionally.
-// Old key 'tateai_memory' will NOT migrate automatically.
-// Users who had a username stored will need to re-register with: name yourname
-// Depth states reset. This is a clean session.
 const defaultMemory = {
-  username: "", visits: 0, scans: 0, buys: 0,
-  copies: 0, commands: 0, lastCommand: "",
-  depthScore: 0, awarenessLevel: 0
+  username: "",
+  visits: 0,
+  scans: 0,
+  buys: 0,
+  copies: 0,
+  commands: 0,
+  lastCommand: "",
+  depthScore: 0,
+  awarenessLevel: 0
 };
+
 const sys = (() => {
-  try { return JSON.parse(localStorage.getItem("tateai_v2")) || {...defaultMemory}; }
-  catch(e) { return {...defaultMemory}; }
+  try {
+    const oldMemory = JSON.parse(localStorage.getItem("tateai_memory"));
+    const newMemory = JSON.parse(localStorage.getItem("tateai_v2"));
+
+    return {
+      ...defaultMemory,
+      ...(oldMemory || {}),
+      ...(newMemory || {})
+    };
+  } catch(e) {
+    return { ...defaultMemory };
+  }
 })();
+
 sys.visits++;
+
 function saveMemory() {
-  try { localStorage.setItem("tateai_v2", JSON.stringify(sys)); } catch(e){}
+  try {
+    localStorage.setItem("tateai_memory", JSON.stringify(sys));
+    localStorage.setItem("tateai_v2", JSON.stringify(sys));
+  } catch(e) {}
 }
+
 saveMemory();
 
 // ══════ DEPTH / HIDDEN LAYER SYSTEM ══════
@@ -1112,7 +1150,7 @@ function checkDepth() {
 
 // ══════ LOG SYSTEM ══════
 const logFeed = document.getElementById('logFeed');
-const MAX_LOG = 70;
+const MAX_LOG = 80;
 
 function addLog(text, type='normal') {
   const line = document.createElement('div');
