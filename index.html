@@ -1283,7 +1283,7 @@ const cmds = {
     setTimeout(() => addLog('ARCHIVE FILE LOCATED: SIG-DOSSIER-001', 'sys'), 600);
     setTimeout(() => {
       addLog('OPENING SIGNAL DOSSIER...', 'sys');
-      window.open('dossier.html', '_blank');
+      window.location.href = 'dossier.html';
     }, 1400);
     sys.depthScore += 2;
     onArchiveBehavior();
@@ -1292,7 +1292,7 @@ const cmds = {
   'archive': () => {
     addLog('[ARCHIVE] ACCESS GRANTED — REDIRECTING OBSERVER...', 'warn');
     setTimeout(() => addLog('SIGNAL DOSSIER LOADING...', 'sys'), 700);
-    setTimeout(() => { window.open('dossier.html', '_blank'); }, 1400);
+    setTimeout(() => { window.location.href = 'dossier.html'; }, 1400);
     sys.depthScore += 2;
     onArchiveBehavior();
     saveMemory(); checkDepth();
