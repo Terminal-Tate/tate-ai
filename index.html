@@ -1045,20 +1045,6 @@ function animGrid(ts) {
 }
 requestAnimationFrame(animGrid);
 
-// ══════ ROBOT PARALLAX — RAF, no setInterval ══════
-const robotWrap = document.getElementById('robotWrap');
-let trX = 0, trY = 0, crX = 0, crY = 0;
-document.addEventListener('mousemove', e => {
-  trX = (e.clientX - window.innerWidth/2) / window.innerWidth;
-  trY = (e.clientY - window.innerHeight/2) / window.innerHeight;
-}, {passive:true});
-
-(function animRobot() {
-  crX += (trX - crX) * 0.05;
-  crY += (trY - crY) * 0.05;
-  robotWrap.style.transform = `translate(${crX*28}px,${crY*16}px) rotateY(${crX*12}deg) rotateX(${-crY*7}deg)`;
-  requestAnimationFrame(animRobot);
-})();
 
 // ══════ AUDIO ══════
 let audioCtx;
