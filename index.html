@@ -652,7 +652,6 @@ footer{position:relative;z-index:5;text-align:center;padding:28px;border-top:1px
 <body> 
 
 <canvas id="bgCanvas"></canvas>
-<canvas id="gridCanvas"></canvas>
 <div class="scanlines"></div>
 
 <!-- Depth indicator — appears after sufficient interaction -->
@@ -976,53 +975,6 @@ function drawMatrix(ts) {
 }
 requestAnimationFrame(drawMatrix);
 
-// ══════ HEX GRID — low frequency ══════
-const gridCanvas = document.getElementById('gridCanvas');
-const gCtx = gridCanvas.getContext('2d');
-let gW, gH, hexTime = 0;
-
-function resizeGrid() {
-  gW = gridCanvas.width = window.innerWidth;
-  gH = gridCanvas.height = window.innerHeight;
-}
-resizeGrid();
-window.addEventListener('resize', resizeGrid, {passive:true});
-
-function drawHex(x, y, r, alpha) {
-  gCtx.beginPath();
-  for (let i = 0; i < 6; i++) {
-    const a = (Math.PI / 3) * i - Math.PI / 6;
-    i === 0 ? gCtx.moveTo(x + r * Math.cos(a), y + r * Math.sin(a))
-            : gCtx.lineTo(x + r * Math.cos(a), y + r * Math.sin(a));
-  }
-  gCtx.closePath();
-  gCtx.strokeStyle = `rgba(57,255,20,${alpha})`;
-  gCtx.lineWidth = .5;
-  gCtx.stroke();
-}
-
-let lastGrid = 0;
-function animGrid(ts) {
-  if (ts - lastGrid < 80) { requestAnimationFrame(animGrid); return; }
-  lastGrid = ts;
-  gCtx.clearRect(0, 0, gW, gH);
-  hexTime += 0.003;
-  const size = 50;
-  const cols = Math.ceil(gW / (size * 1.5)) + 2;
-  const rows = Math.ceil(gH / (size * Math.sqrt(3))) + 2;
-  for (let col = -1; col < cols; col++) {
-    for (let row = -1; row < rows; row++) {
-      const x = col * size * 1.5;
-      const y = row * size * Math.sqrt(3) + (col % 2 ? size * Math.sqrt(3) / 2 : 0);
-      const dist = Math.sqrt(Math.pow(x - gW/2, 2) + Math.pow(y - gH/2, 2));
-      const wave = Math.sin(dist * 0.009 - hexTime) * 0.5 + 0.5;
-      drawHex(x, y, size * 0.52, wave * 0.032);
-    }
-  }
-  requestAnimationFrame(animGrid);
-}
-requestAnimationFrame(animGrid);
-
 
 // ══════ AUDIO ══════
 let audioCtx;
@@ -1079,7 +1031,6 @@ return mergedMemory;
   }
 })();
 
-sys.visits++;
 
 function saveMemory() {
   try {
@@ -1357,7 +1308,6 @@ setTimeout(() => {
     addLog('Type: name yourname', 'sys');
   } else {
     addLog('Welcome back, ' + sys.username + '.', 'sys');
-    addLog('[MEM] VISITS: ' + sys.visits, 'sys');
   }
   checkDepth();
 }, 4800);
