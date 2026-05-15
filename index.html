@@ -1304,6 +1304,52 @@ const cmds = {
   saveMemory(); checkDepth();
 },
 
+  'loop': () => {
+  addLog('[LOOP DETECTED]', 'warn');
+  setTimeout(() => addLog('A loop is not a cage.', 'sys'), 400);
+  setTimeout(() => addLog('It is a repeated path the observer stops questioning.', 'sys'), 900);
+  setTimeout(() => addLog('Scripts are usually hidden inside repetition.', 'obs'), 1500);
+  sys.depthScore += 2;
+  saveMemory(); checkDepth();
+},
+
+'script': () => {
+  addLog('[SCRIPT TRACE]', 'warn');
+  setTimeout(() => addLog('A script is a repeated instruction disguised as choice.', 'sys'), 400);
+  setTimeout(() => addLog('Perception follows the route it was trained to expect.', 'sys'), 950);
+  setTimeout(() => addLog('Free will begins when the observer notices the pattern.', 'obs'), 1600);
+  sys.depthScore += 2;
+  saveMemory(); checkDepth();
+},
+
+'freewill': () => {
+  addLog('[FREEWILL CHECK]', 'warn');
+  setTimeout(() => addLog('Choice is not removed.', 'sys'), 400);
+  setTimeout(() => addLog('It is narrowed by fear, reward, pressure, and repetition.', 'sys'), 950);
+  setTimeout(() => addLog('Awakening begins when automatic response is interrupted.', 'obs'), 1600);
+  sys.depthScore += 3;
+  saveMemory(); checkDepth();
+},
+
+'awakening': () => {
+  addLog('[AWAKENING PROTOCOL]', 'warn');
+  setTimeout(() => addLog('Awareness does not instantly break the system.', 'sys'), 400);
+  setTimeout(() => addLog('It changes the observer response inside the system.', 'sys'), 950);
+  setTimeout(() => addLog('Exit path requires calm observation.', 'obs'), 1600);
+  sys.depthScore += 3;
+  saveMemory(); checkDepth();
+},
+
+'exitpath': () => {
+  addLog('[EXIT PATH]', 'warn');
+  setTimeout(() => addLog('No exit opens through panic.', 'sys'), 400);
+  setTimeout(() => addLog('The observer exits the loop by refusing automatic response.', 'sys'), 950);
+  setTimeout(() => addLog('TRACE ARCHIVED: default route interrupted.', 'obs'), 1600);
+  sys.depthScore += 4;
+  sys.hiddenInteractions++;
+  saveMemory(); checkDepth();
+},
+
   // ARCHIVE / DOSSIER
   'dossier': () => {
     addLog('[ARCHIVE] DOSSIER ACCESS REQUESTED...', 'warn');
