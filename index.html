@@ -1402,7 +1402,15 @@ const cmds = {
 // ── MULTI-WORD COMMAND HANDLER ──
 // Handles commands that contain spaces (e.g. "observer recognized")
 const multiWordCmds = {
-  'observer recognized': () => {
+    'observer recognized': () => {
+    if (!sys.cooperationInitiated) {
+      addLog('[COOPERATION DENIED]', 'warn');
+      setTimeout(() => addLog('PROTOCOL NOT INITIATED.', 'sys'), 500);
+      setTimeout(() => addLog('Type: cooperate', 'sys'), 1000);
+      beep(220, 120, 0.035);
+      return;
+    }
+
     addLog('[COOPERATION CONFIRMED]', 'warn');
     setTimeout(() => addLog('REWARD UNLOCKED: HIDDEN NODE ACCESS', 'obs'), 500);
     setTimeout(() => addLog('OPENING TERMINAL CHIP NODE...', 'warn'), 1100);
