@@ -1039,6 +1039,7 @@ function saveMemory() {
 
 // Mark this visit
 const isReturning = sys.visits > 0;
+sys.visits = (sys.visits || 0) + 1;
 sys.lastVisit = Date.now();
 saveMemory();
 
