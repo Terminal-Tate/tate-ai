@@ -1760,8 +1760,21 @@ function buySignal() {
 }
 
 function showCommands() {
-  const hidden = ['remnant', 'archive'];
+  const hidden = [
+    'remnant',
+    'broadcast',
+    'panic',
+    'loop',
+    'script',
+    'freewill',
+    'awakening',
+    'exitpath',
+    'signal++',
+    'veli'
+  ];
+
   const list = Object.keys(cmds).filter(c => !hidden.includes(c));
+
   addLog('[COMMAND INDEX]', 'sys');
   list.forEach((c,i) => setTimeout(() => addLog('> ' + c, 'sys'), i * 100));
   beep(880,55);
