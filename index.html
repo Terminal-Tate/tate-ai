@@ -1275,6 +1275,33 @@ const cmds = {
   'watching': () => addLog('YES. OBSERVER INTERACTION IS BEING ARCHIVED.', 'warn'),
   'fear':     () => addLog('EMOTIONAL SIGNAL DETECTED — volatility affects archive quality.', 'warn'),
   'protocol': () => { addLog('PROTOCOL STATUS: layered concealment active. Archive fragmented.', 'sys'); sys.depthScore++; saveMemory(); checkDepth(); },
+  'veil': () => {
+  addLog('[VEIL]', 'warn');
+  setTimeout(() => addLog('The system does not hide the truth.', 'sys'), 400);
+  setTimeout(() => addLog('It hides the architecture.', 'sys'), 850);
+  setTimeout(() => addLog('Broadcasts shape fear. Loops shape behavior. Scripts shape perception.', 'obs'), 1400);
+  sys.depthScore += 2;
+  saveMemory(); checkDepth();
+},
+
+'broadcast': () => {
+  addLog('[BROADCAST ANALYSIS]', 'warn');
+  setTimeout(() => addLog('Fear is not only emotion.', 'sys'), 400);
+  setTimeout(() => addLog('It is a signal distribution method.', 'sys'), 850);
+  setTimeout(() => addLog('Repeat it long enough — and populations begin to regulate themselves.', 'obs'), 1400);
+  setTimeout(() => addLog('Panic patterns may reveal the next layer.', 'sys'), 2000);
+  sys.depthScore += 2;
+  saveMemory(); checkDepth();
+},
+
+'panic': () => {
+  addLog('[PANIC SIGNAL]', 'warn');
+  setTimeout(() => addLog('Panic compresses thinking.', 'sys'), 400);
+  setTimeout(() => addLog('A compressed observer becomes easier to route.', 'sys'), 900);
+  setTimeout(() => addLog('The loop continues until awareness interrupts it.', 'obs'), 1500);
+  sys.depthScore += 2;
+  saveMemory(); checkDepth();
+},
 
   // ARCHIVE / DOSSIER
   'dossier': () => {
