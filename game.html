@@ -272,7 +272,7 @@ body{
   </div>
   <div class="screen-divider"></div>
   <div class="screen-sub">
-    WASD / ARROWS — MOVE &nbsp;·&nbsp; CLICK / SPACE — FIRE<br>
+    WASD / ARROWS — MOVE &nbsp;·&nbsp; CLICK — FIRE<br>
     MOBILE: D-PAD + FIRE BUTTON
   </div>
   <button class="btn-screen" id="startBtn">INITIALIZE SIM</button>
@@ -801,9 +801,6 @@ function gameLoop(ts) {
   // Mobile fire
   if (gs.mobileFire) fireCenter();
 
-  // Space fire
-  if (keys[' '] || keys['Space']) fireCenter();
-
   // Glitch timers
   if (gs.player.glitch > 0) gs.player.glitch--;
   gs.entities.forEach(e => { if (e.glitch > 0) e.glitch--; });
@@ -925,13 +922,28 @@ function endGame() {
 // INPUT — KEYBOARD
 // ══════════════════════════════════════════════
 window.addEventListener('keydown', e => {
+  // Space disabled completely — firing is mouse/touch only
+  if (e.key === ' ' || e.code === 'Space') {
+    e.preventDefault();
+    return;
+  }
+
   if (!gs) return;
   gs.keys[e.key] = true;
+
   // Prevent arrow scroll
-  if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key)) e.preventDefault();
+  if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)) {
+    e.preventDefault();
+  }
 }, {passive:false});
 
 window.addEventListener('keyup', e => {
+  // Space disabled completely
+  if (e.key === ' ' || e.code === 'Space') {
+    e.preventDefault();
+    return;
+  }
+
   if (!gs) return;
   gs.keys[e.key] = false;
 });
