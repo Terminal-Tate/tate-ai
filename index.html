@@ -32,27 +32,13 @@ body {
   color: var(--g);
   font-family: var(--font-mono);
   overflow-x: hidden;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24'%3E%3Cpath fill='black' stroke='%2339ff14' stroke-width='1' d='M4 2 L4 20 L9 15 L12 22 L15 21 L12 14 L19 14 Z'/%3E%3C/svg%3E") 2 2, auto;
+}
+  a, button, .hotspot, .hud-item {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24'%3E%3Cpath fill='black' stroke='%2339ff14' stroke-width='1' d='M4 2 L4 20 L9 15 L12 22 L15 21 L12 14 L19 14 Z'/%3E%3C/svg%3E") 2 2, pointer;
 }
 
-/* ── CURSOR (desktop only) ── */
-#cur {
-  position: fixed; width: 22px; height: 22px;
-  border: 1px solid var(--g); border-radius: 50%;
-  pointer-events: none; z-index: 999999;
-  transform: translate(-50%,-50%);
-  transition: width .12s, height .12s, border-color .12s;
-  box-shadow: 0 0 10px var(--g-glow), inset 0 0 10px rgba(57,255,20,0.08);
-  mix-blend-mode: screen;
-}
-#cur.expand { width: 42px; height: 42px; border-color: var(--g2); background: rgba(57,255,20,0.04); }
-#cur-d {
-  position: fixed; width: 4px; height: 4px;
-  background: var(--g); border-radius: 50%;
-  pointer-events: none; z-index: 999999;
-  transform: translate(-50%,-50%);
-  box-shadow: 0 0 8px var(--g), 0 0 16px var(--g-glow);
-}
-@media(hover:none){ #cur, #cur-d { display: none; } body { cursor: default; } }
+
 
 /* ── BG LAYERS ── */
 #bgCanvas {
@@ -911,8 +897,7 @@ footer{position:relative;z-index:5;text-align:center;padding:28px;border-top:1px
 </head>
 <body>
 
-<div id="cur"></div>
-<div id="cur-d"></div>
+
 <canvas id="bgCanvas"></canvas>
 <canvas id="particleCanvas"></canvas>
 <div class="scanlines"></div>
@@ -1312,21 +1297,7 @@ footer{position:relative;z-index:5;text-align:center;padding:28px;border-top:1px
 <div id="toastAlert" class="toast"></div>
 
 <script>
-// ══════════════════════════════════════════════
-// CUSTOM CURSOR
-// ══════════════════════════════════════════════
-const curEl = document.getElementById('cur');
-const curDot = document.getElementById('cur-d');
-let mx = 0, my = 0;
-if (curEl) {
-  document.addEventListener('mousemove', e => {
-    mx = e.clientX; my = e.clientY;
-    curEl.style.left = mx + 'px'; curEl.style.top = my + 'px';
-    curDot.style.left = mx + 'px'; curDot.style.top = my + 'px';
-  }, {passive:true});
-  document.addEventListener('mouseenter', e => { if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON' || e.target.classList.contains('hotspot') || e.target.classList.contains('hud-item')) curEl.classList.add('expand'); }, true);
-  document.addEventListener('mouseleave', e => { if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON' || e.target.classList.contains('hotspot') || e.target.classList.contains('hud-item')) curEl.classList.remove('expand'); }, true);
-}
+
 
 // ══════════════════════════════════════════════
 // MATRIX CANVAS
@@ -1451,7 +1422,6 @@ function enterSite() {
     beep(550, 80, 0.04);
     setTimeout(() => beep(770, 80, 0.04), 100);
     setTimeout(() => beep(990, 120, 0.05), 200);
-    document.body.style.cursor = 'none';
     setTimeout(() => { entryGate.style.display = 'none'; }, 900);
   }
 }
