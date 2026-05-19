@@ -1449,6 +1449,7 @@ const defaultMemory = {
   scans: 0,
   buys: 0,
   copies: 0,
+  walletScans: 0,
   commands: 0,
   lastCommand: "",
   depthScore: 0,
@@ -1563,6 +1564,8 @@ function checkDepth() {
 // ══════════════════════════════════════════════
 const logFeed = document.getElementById('logFeed');
 const MAX_LOG = 80;
+
+  let walletScanAwaitingAddress = false;
 
 function addLog(text, type='normal') {
   const line = document.createElement('div');
@@ -1682,6 +1685,215 @@ function smartReply(cmd) {
   return smartReplies[Math.floor(Math.random() * smartReplies.length)];
 }
 
+
+// ══════════════════════════════════════════════
+// WALLET ANOMALY SCANNER — FREE SOLANA RPC
+// ══════════════════════════════════════════════
+const SOLANA_RPC = 'https://api.mainnet-beta.solana.com';
+
+function isValidSolanaAddress(address) {
+  return /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(address);
+}
+
+async function solanaRpc(method, params) {
+  const res = await fetch(SOLANA_RPC, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      jsonrpc: '2.0',
+      id: Date.now(),
+      method,
+      params
+    })
+  });
+
+  if (!res.ok) throw new Error('RPC HTTP ERROR');
+
+  const data = await res.json();
+
+  if (data.error) {
+    throw new Error(data.error.message || 'RPC ERROR');
+  }
+
+  return data.result;
+}
+
+function beginWalletScan() {
+  walletScanAwaitingAddress = true;
+
+  addLog('[WALLET SCAN MODULE]', 'warn');
+
+  setTimeout(() => {
+    addLog('Paste Solana wallet address and press ENTER.', 'sys');
+  }, 400);
+
+  setTimeout(() => {
+    addLog('The terminal will scan public on-chain traces only.', 'obs');
+  }, 900);
+
+  beep(440, 60, 0.04);
+}
+
+async function runWalletScan(address) {
+
+  walletScanAwaitingAddress = false;
+
+  if (!isValidSolanaAddress(address)) {
+
+    addLog('[WALLET SCAN REJECTED]', 'warn');
+    addLog('Invalid Solana address format.', 'sys');
+
+    beep(220, 120, 0.035);
+
+    return;
+  }
+
+  addLog('[WALLET SCAN STARTED]', 'warn');
+
+  addLog(
+    'TARGET: ' +
+    address.slice(0, 6) +
+    '...' +
+    address.slice(-6),
+    'sys'
+  );
+
+  addLog('QUERYING SOLANA PUBLIC RPC...', 'sys');
+
+  try {
+
+    const [balanceData, tokenData, sigData] = await Promise.all([
+
+      solanaRpc('getBalance', [address]),
+
+      solanaRpc('getTokenAccountsByOwner', [
+        address,
+        {
+          programId:
+          'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'
+        },
+        {
+          encoding: 'jsonParsed'
+        }
+      ]),
+
+      solanaRpc('getSignaturesForAddress', [
+        address,
+        {
+          limit: 10
+        }
+      ])
+
+    ]);
+
+    const solBalance =
+      (balanceData.value / 1000000000).toFixed(4);
+
+    const tokenAccounts =
+      tokenData.value.length;
+
+    const recentTx =
+      sigData.length;
+
+    let anomaly =
+      'LOW ACTIVITY / CLEAN TRACE';
+
+    if (
+      tokenAccounts >= 50 &&
+      recentTx >= 10
+    ) {
+
+      anomaly =
+        'HIGH TOKEN FRAGMENTATION + ACTIVE TRANSACTION TRACE';
+
+    } else if (tokenAccounts >= 50) {
+
+      anomaly =
+        'HIGH TOKEN FRAGMENTATION DETECTED';
+
+    } else if (recentTx >= 10) {
+
+      anomaly =
+        'RECENT ACTIVITY SPIKE DETECTED';
+
+    } else if (
+      Number(solBalance) < 0.01 &&
+      tokenAccounts > 10
+    ) {
+
+      anomaly =
+        'LOW SOL BALANCE / TOKEN DUST PATTERN';
+    }
+
+    addLog('[SCAN COMPLETE]', 'warn');
+
+    setTimeout(() => {
+      addLog(
+        'SOL BALANCE: ' +
+        solBalance +
+        ' SOL',
+        'sys'
+      );
+    }, 300);
+
+    setTimeout(() => {
+      addLog(
+        'TOKEN ACCOUNTS: ' +
+        tokenAccounts,
+        'sys'
+      );
+    }, 650);
+
+    setTimeout(() => {
+      addLog(
+        'RECENT TX TRACE: ' +
+        recentTx +
+        ' signatures loaded',
+        'sys'
+      );
+    }, 1000);
+
+    setTimeout(() => {
+      addLog(
+        'ANOMALY TRACE: ' +
+        anomaly,
+        'obs'
+      );
+    }, 1400);
+
+    sys.walletScans =
+      (sys.walletScans || 0) + 1;
+
+    sys.depthScore += 2;
+
+    saveMemory();
+    checkDepth();
+
+    beep(660, 70, 0.04);
+
+    setTimeout(() => {
+      beep(880, 90, 0.04);
+    }, 120);
+
+  } catch (err) {
+
+    addLog('[RPC ERROR]', 'err');
+
+    addLog(
+      'Wallet scan failed. Public RPC may be rate-limited.',
+      'sys'
+    );
+
+    addLog(
+      'Try again later or use another wallet address.',
+      'sys'
+    );
+
+    beep(220, 120, 0.035);
+  }
+}
+  
+
 // ══════════════════════════════════════════════
 // COMMAND SYSTEM
 // ══════════════════════════════════════════════
@@ -1689,7 +1901,7 @@ const cmds = {
   // ── PUBLIC COMMANDS ──
   'help': () => {
     addLog('[PUBLIC COMMAND INDEX]', 'sys');
-    const publicCmds = ['help','index','hint','hints','name [value]','whoami','status','price','contract','ca','copy','signal','scan','clear','state','matrix','intel','node','ai','terminal','access','system','watching','fear','protocol','wake','signal++','deeper','dossier','veil'];
+    const publicCmds = ['help','index','hint','hints','name [value]','whoami','status','price','contract','ca','copy','signal','scan','walletscan','clear','state','matrix','intel','node','ai','terminal','access','system','watching','fear','protocol','wake','signal++','deeper','dossier','veil'];
     publicCmds.forEach((c, i) => setTimeout(() => addLog('> ' + c, 'sys'), i * 80));
     beep(880, 55);
   },
@@ -1732,6 +1944,7 @@ const cmds = {
   'ca':       () => cmds['contract'](),
   'copy':     () => copyCA(),
   'signal':   () => { const s = Math.floor(Math.random()*31)+60; addLog(`SIGNAL: ${'█'.repeat(Math.round(s/10))}${'░'.repeat(10-Math.round(s/10))} ${s}%`, 'sys'); },
+  'walletscan': () => beginWalletScan(),
   'scan':     () => { scanSignal(); addLog('[SCAN TRIGGERED FROM TERMINAL]', 'sys'); },
   'clear':    () => { logFeed.innerHTML = ''; },
   'state':    () => {
@@ -1925,13 +2138,27 @@ const multiWordCmds = {
 
 // ── TERMINAL INPUT HANDLER ──
 document.getElementById('terminalInput').addEventListener('keydown', e => {
+
   if (e.key !== 'Enter') return;
+
   const raw = e.target.value.trim();
-  const cmd = raw.toLowerCase();
-  if (!cmd) return;
+
+  if (!raw) return;
+
   beep(660, 50);
+
   addLog('root@tateai:~$ ' + raw);
+
   e.target.value = '';
+
+  if (walletScanAwaitingAddress) {
+
+    runWalletScan(raw);
+
+    return;
+  }
+
+  const cmd = raw.toLowerCase();;
 
   setTimeout(() => {
     if (cmd.startsWith('name ')) {
