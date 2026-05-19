@@ -1793,11 +1793,33 @@ async function runWalletScan(address) {
 
   try {
 
-    const [balanceData, tokenData, sigData] = await Promise.all([
+    let balanceData = { value: 0 };
+let tokenData = { value: [] };
+let sigData = [];
 
-      solanaRpc('getBalance', [address]),
+try {
 
-      solanaRpc('getTokenAccountsByOwner', [
+  balanceData =
+    await solanaRpc(
+      'getBalance',
+      [address]
+    );
+
+} catch (e) {
+
+  addLog(
+    'BALANCE CHECK FAILED: ' +
+    (e.message || 'unknown'),
+    'sys'
+  );
+}
+
+try {
+
+  tokenData =
+    await solanaRpc(
+      'getTokenAccountsByOwner',
+      [
         address,
         {
           programId:
@@ -1806,16 +1828,42 @@ async function runWalletScan(address) {
         {
           encoding: 'jsonParsed'
         }
-      ]),
+      ]
+    );
 
-      solanaRpc('getSignaturesForAddress', [
+} catch (e) {
+
+  addLog(
+    'TOKEN ACCOUNT CHECK LIMITED BY RPC.',
+    'sys'
+  );
+
+  tokenData = { value: [] };
+}
+
+try {
+
+  sigData =
+    await solanaRpc(
+      'getSignaturesForAddress',
+      [
         address,
         {
           limit: 10
         }
-      ])
+      ]
+    );
 
-    ]);
+} catch (e) {
+
+  addLog(
+    'RECENT TX CHECK FAILED: ' +
+    (e.message || 'unknown'),
+    'sys'
+  );
+
+  sigData = [];
+}
 
     const solBalance =
       (balanceData.value / 1000000000).toFixed(4);
