@@ -1689,33 +1689,64 @@ function smartReply(cmd) {
 // ══════════════════════════════════════════════
 // WALLET ANOMALY SCANNER — FREE SOLANA RPC
 // ══════════════════════════════════════════════
-const SOLANA_RPC = 'https://api.mainnet-beta.solana.com';
+const SOLANA_RPCS = [
+  'https://api.mainnet-beta.solana.com',
+  'https://solana-rpc.publicnode.com',
+  'https://solana.drpc.org'
+];
 
 function isValidSolanaAddress(address) {
   return /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(address);
 }
 
 async function solanaRpc(method, params) {
-  const res = await fetch(SOLANA_RPC, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      jsonrpc: '2.0',
-      id: Date.now(),
-      method,
-      params
-    })
-  });
 
-  if (!res.ok) throw new Error('RPC HTTP ERROR');
+  let lastError = null;
 
-  const data = await res.json();
+  for (const rpc of SOLANA_RPCS) {
 
-  if (data.error) {
-    throw new Error(data.error.message || 'RPC ERROR');
+    try {
+
+      const res = await fetch(rpc, {
+
+        method: 'POST',
+
+        headers: {
+          'Content-Type': 'application/json'
+        },
+
+        body: JSON.stringify({
+          jsonrpc: '2.0',
+          id: Date.now(),
+          method,
+          params
+        })
+
+      });
+
+      if (!res.ok) {
+        throw new Error('RPC HTTP ERROR: ' + res.status);
+      }
+
+      const data = await res.json();
+
+      if (data.error) {
+        throw new Error(
+          data.error.message || 'RPC ERROR'
+        );
+      }
+
+      return data.result;
+
+    } catch (err) {
+
+      lastError = err;
+    }
   }
 
-  return data.result;
+  throw lastError || new Error(
+    'ALL RPC ENDPOINTS FAILED'
+  );
 }
 
 function beginWalletScan() {
