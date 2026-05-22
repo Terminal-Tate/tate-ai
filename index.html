@@ -979,8 +979,13 @@ footer{position:relative;z-index:5;text-align:center;padding:28px;border-top:1px
   <span class="hud-item-label">ARCHIVE NOTICE</span>
   <span class="hud-item-arrow">›</span>
 </a>
-<a class="hud-item" href="#community" onclick="enterSite()">
+<a class="hud-item" href="matrix-war-room.html">
   <span class="hud-item-num">08</span>
+  <span class="hud-item-label">MATRIX WAR ROOM</span>
+  <span class="hud-item-arrow">›</span>
+</a>
+<a class="hud-item" href="#community" onclick="enterSite()">
+  <span class="hud-item-num">09</span>
   <span class="hud-item-label">COMMUNITY</span>
   <span class="hud-item-arrow">›</span>
 </a>
@@ -1136,6 +1141,7 @@ footer{position:relative;z-index:5;text-align:center;padding:28px;border-top:1px
           <a href="dossier.html" class="btn btn-outline">▣ &nbsp;DOSSIER</a>
           <a href="disclosure.html" class="btn btn-outline">▣ &nbsp;ARCHIVE NOTICE</a>
           <a href="game.html" class="btn btn-sim">▶ &nbsp;DEFENSE SIM</a>
+          <a href="matrix-war-room.html" class="btn btn-sim">♟ &nbsp;MATRIX WAR ROOM</a>
           <div class="ca-display">CA: BoBj68cWnCvzMNUKzJyR7Jq7tLM3v76D1pYL1E8rpump</div>
         </div>
       </div>
@@ -1980,7 +1986,7 @@ const cmds = {
   // ── PUBLIC COMMANDS ──
   'help': () => {
     addLog('[PUBLIC COMMAND INDEX]', 'sys');
-    const publicCmds = ['help','index','hint','hints','name [value]','whoami','status','price','contract','ca','copy','signal','scan','walletscan','clear','state','matrix','intel','node','ai','terminal','access','system','watching','fear','protocol','wake','signal++','deeper','dossier','veil'];
+   const publicCmds = ['help','index','hint','hints','name [value]','whoami','status','price','contract','ca','copy','signal','scan','walletscan','warroom','clear','state','matrix','intel','node','ai','terminal','access','system','watching','fear','protocol','wake','signal++','deeper','dossier','veil'];
     publicCmds.forEach((c, i) => setTimeout(() => addLog('> ' + c, 'sys'), i * 80));
     beep(880, 55);
   },
@@ -2081,6 +2087,34 @@ const cmds = {
     addLog(`VISITS: ${sys.visits} | DEPTH: ${sys.depthScore} | CLASS: ${sys.observerClass}`, 'sys');
     addLog(`AWARENESS LEVEL: ${sys.awarenessLevel || 0}`, 'sys');
   },
+  'warroom': () => {
+  addLog('[MATRIX WAR ROOM]', 'warn');
+
+  setTimeout(() => {
+    addLog('Strategic simulation chamber access granted.', 'sys');
+  }, 400);
+
+  setTimeout(() => {
+    addLog('SYSTEM MODE required for hidden node verification.', 'obs');
+  }, 900);
+
+  setTimeout(() => {
+    addLog('Opening Matrix War Room...', 'warn');
+  }, 1400);
+
+  sys.depthScore += 2;
+  sys.hiddenInteractions++;
+  saveMemory();
+  checkDepth();
+
+  try {
+    localStorage.setItem('tateai_warroom_access', 'terminal');
+  } catch(e) {}
+
+  setTimeout(() => {
+    window.location.href = 'matrix-war-room.html?mode=system&access=terminal';
+  }, 1900);
+},
   'veil': () => {
   addLog('[VEIL]', 'warn');
   setTimeout(() => addLog('The system does not hide every command.', 'sys'), 400);
