@@ -982,13 +982,18 @@ footer{position:relative;z-index:5;text-align:center;padding:28px;border-top:1px
   <span class="hud-item-label">ARCHIVE NOTICE</span>
   <span class="hud-item-arrow">›</span>
 </a>
-<a class="hud-item" href="matrix-war-room.html">
+<a class="hud-item" href="signal-disclosure.html">
   <span class="hud-item-num">08</span>
+  <span class="hud-item-label">SIGNAL DISCLOSURE</span>
+  <span class="hud-item-arrow">›</span>
+</a>
+<a class="hud-item" href="matrix-war-room.html">
+  <span class="hud-item-num">09</span>
   <span class="hud-item-label">MATRIX WAR ROOM</span>
   <span class="hud-item-arrow">›</span>
 </a>
 <a class="hud-item" href="#community" onclick="enterSite()">
-  <span class="hud-item-num">09</span>
+  <span class="hud-item-num">10</span>
   <span class="hud-item-label">COMMUNITY</span>
   <span class="hud-item-arrow">›</span>
 </a>
@@ -1141,10 +1146,11 @@ footer{position:relative;z-index:5;text-align:center;padding:28px;border-top:1px
           <a href="#signals" class="btn btn-outline">◈ &nbsp;LIVE SIGNALS</a>
           <button onclick="copyCA()" class="btn btn-outline">⊕ &nbsp;COPY CA</button>
           <button onclick="showCommands()" class="btn btn-outline">⌘ &nbsp;INDEX</button>
-          <a href="dossier.html" class="btn btn-outline">▣ &nbsp;DOSSIER</a>
-          <a href="disclosure.html" class="btn btn-outline">▣ &nbsp;ARCHIVE NOTICE</a>
-          <a href="game.html" class="btn btn-sim">▶ &nbsp;DEFENSE SIM</a>
-          <a href="matrix-war-room.html" class="btn btn-sim">♟ &nbsp;MATRIX WAR ROOM</a>
+         <a href="dossier.html" class="btn btn-outline">▣ &nbsp;DOSSIER</a>
+         <a href="disclosure.html" class="btn btn-outline">▣ &nbsp;ARCHIVE NOTICE</a>
+         <a href="signal-disclosure.html" class="btn btn-outline">▤ &nbsp;SIGNAL DISCLOSURE</a>
+         <a href="game.html" class="btn btn-sim">▶ &nbsp;DEFENSE SIM</a>
+         <a href="matrix-war-room.html" class="btn btn-sim">♟ &nbsp;MATRIX WAR ROOM</a>
           <div class="ca-display">CA: BoBj68cWnCvzMNUKzJyR7Jq7tLM3v76D1pYL1E8rpump</div>
         </div>
       </div>
@@ -1992,7 +1998,7 @@ const cmds = {
   // ── PUBLIC COMMANDS ──
   'help': () => {
     addLog('[PUBLIC COMMAND INDEX]', 'sys');
-   const publicCmds = ['help','index','hint','hints','name [value]','whoami','status','price','contract','ca','copy','signal','scan','walletscan','warroom','clear','state','matrix','intel','node','ai','terminal','access','system','watching','fear','protocol','wake','signal++','deeper','dossier','veil'];
+   const publicCmds = ['help','index','hint','hints','name [value]','whoami','status','price','contract','ca','copy','signal','scan','walletscan','warroom','clear','state','matrix','intel','node','ai','terminal','access','system','watching','fear','protocol','wake','signal++','deeper','dossier','disclosure','veil'];
     publicCmds.forEach((c, i) => setTimeout(() => addLog('> ' + c, 'sys'), i * 80));
     beep(880, 55);
   },
@@ -2087,6 +2093,27 @@ const cmds = {
     setTimeout(() => { addLog('OPENING SIGNAL DOSSIER...', 'sys'); window.location.href = 'dossier.html'; }, 1400);
     sys.depthScore += 2; onArchiveBehavior(); saveMemory(); checkDepth();
   },
+  'disclosure': () => {
+    addLog('[SIGNAL DISCLOSURE] ARCHIVE NODE REQUESTED...', 'warn');
+
+    setTimeout(() => {
+      addLog('DECLASSIFIED SIGNAL FILE LOCATED: TA-SD-2026', 'sys');
+    }, 500);
+
+    setTimeout(() => {
+      addLog('OPENING SIGNAL DISCLOSURE...', 'sys');
+    }, 1100);
+
+    sys.depthScore += 2;
+    onArchiveBehavior();
+    saveMemory();
+    checkDepth();
+
+    setTimeout(() => {
+      window.location.href = 'signal-disclosure.html';
+    }, 1600);
+  },
+  
   'whoami': () => {
     const name = sys.username || 'UNREGISTERED';
     addLog(`DESIGNATION: ${name}`, 'obs');
